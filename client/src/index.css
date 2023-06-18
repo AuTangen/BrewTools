@@ -1,0 +1,104 @@
+
+:root {
+  --text-color:rgb(255, 255, 255);
+  --back-color: #fcebbc
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    background-color: var(--back-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* GLOBAL CLASSES */
+.responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+.centered {
+  position: absolute;
+  top: 30%;
+  left: 27%;
+  transform: translate(-50%, -50%);
+}
+/* CUSTOM CLASSES */
+
+.landing-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10%;
+ 
+}
+
+.logo {
+  margin-bottom: 5%;
+}
+
+
+.button-wrap {
+  position: relative;
+}
+
+#start-text {
+ transform: rotate(-25deg);
+  font-family: "sneakers-pro", sans-serif;
+font-weight: 500;
+font-style: normal;
+color: var(--back-color);
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.calc-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10%;
+  
+ 
+}
+
+.calc-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 2%;
+  align-items:center;
+  margin-bottom: 15%;
+}
+
+.calc-header-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: fit-content;
+  padding: 5%;
+  border-radius: 10px;
+  background-color:ivory;
+}
+
+.recipe-input {
+  margin-left: 2%;
+}
+
+
+
+#savebtn {
+  height: fit-content;
+  padding: 2%;
+
+}

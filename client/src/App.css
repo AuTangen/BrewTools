@@ -1,0 +1,29 @@
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+} */
+
+@media (prefers-reduced-motion: no-preference) {
+  .start:hover {
+    animation: cap-spin infinite 1.5s linear;
+  }
+ #start-text:hover + #start{
+    animation: cap-spin infinite 1.5s linear;
+  }
+}
+
+
+@keyframes cap-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
