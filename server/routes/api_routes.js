@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const User = require('../models/User');
-const Recipe = require('../models/Recipe');
+
+const Fermentable = require('../models/Fermentables')
 
 function isAuthenticated(req, res, next) {
   if (!req.session.user_id) 
@@ -8,6 +8,14 @@ function isAuthenticated(req, res, next) {
   
   next();
 }
+
+
+
+router.get('/fermentables', async (req,res) => {
+  fermentables = await Fermentable.find();
+  res.send(fermentables)
+  
+})
 
 // // get all drinks or get by search query
 // router.get('/drinks', async (req, res) => {
@@ -77,29 +85,20 @@ function isAuthenticated(req, res, next) {
 // })
 
 // // create a drink and adds it to the users favorites
-// router.post('/drinks', isAuthenticated, async (req, res) => {
-// const user_id = req.session.user_id
-// try {
-//   const drink = await Drink.create({
-//     ...req.body,
-//     user: user_id
-//    });
+router.post('/fermentables', async (req, res) => {
 
-//    const user = await User.findOneAndUpdate({
-//     _id: user_id
-//   }, {
-//     '$addToSet': {
-//       favorites: drink._id
-//     }, 
-//   }, {new: true}).populate('favorites');
-
+try {
+  const fermentable = await Fermentable.create({
+    ...req.body,
    
-//   res.send({user})
- 
-// } catch {
-// res.status(500).send({ error: err})
-// }
-// });
+   });
+   res.send('Fermentable Created')
+console.log(fermentable)
+  
+} catch {
+res.status(402).send({ error: err})
+}
+});
 
 
 
