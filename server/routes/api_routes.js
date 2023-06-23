@@ -9,12 +9,20 @@ function isAuthenticated(req, res, next) {
   next();
 }
 
-
+// get all fermentables for dropdown list
 
 router.get('/fermentables', async (req,res) => {
   fermentables = await Fermentable.find();
   res.send(fermentables)
   
+});
+
+
+// find one fermentable for calculator data
+
+router.get('/fermentable/:name', async (req,res) => {
+  fermentable = await Fermentable.findOne({name: req.params.name})
+  res.send(fermentable)
 })
 
 // // get all drinks or get by search query

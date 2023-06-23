@@ -6,20 +6,28 @@ import AddFerm from '../components/AddFerm';
 
 
 
+
+
 function RecipeCalc(props) {
 
-
+    const [volume, setVolume] = useState(5)
     const [grainTotal, setGrainTotal] = useState()
     const [gristPercent, setGristPercent] = useState()
+    const [fermAmounts, setFermAmounts] = useState([])
+    const [fermData, setFermData] = useState([])
+    const [srm, setSRM] = useState()
 
     const ref = React.useRef(null)
+
+
+    const handleVolChange = (event) => {
+        console.log(event.target.value)
+        setVolume(event.target.value)
+    }
 
     const handleGrainChange = () => {
 
         var divObject = ref.current.children
-        for (let i = 0; i < divObject.length; i++) {
-        console.log(divObject[i].children[3])
-        }
         var grainInput = Array.from(ref.current.children)
 
         const valueArray = []
@@ -33,6 +41,8 @@ function RecipeCalc(props) {
 
 
         }
+        
+
         let percentArray = [];
         var arrayNumbers = valueArray.map(Number)
         arrayNumbers.forEach(function (num) {
@@ -41,15 +51,55 @@ function RecipeCalc(props) {
                 console.log('row ' + i + ' ' + percentArray[i])
                 divObject[i].children[3].innerHTML = percentArray[i] + '%'
             }
-            // console.log('Percent ' + percentArray[0]);
+            
         
         });
 
-        // setGristPercent(sum / grainInput.length)
+        
         setGrainTotal(sum)
+        setFermAmounts(arrayNumbers)
 
+        getFermData();
+
+            
+        
+        
+        
+       
+       
 
     }
+
+    // -----------------------------------------------------------
+
+  const getFermData = async () => {
+    let fermDataArray = []
+        for (let i = 0; i < ref.current.children.length; i++) {
+        axios.get(`/api/fermentable/${ref.current.children[i].children[2].value}`).then(res => {
+            fermDataArray.push(res.data)
+            
+        })
+    }
+        setFermData(fermDataArray)
+        console.log(fermData)
+        const MCU = [];
+        let MCUsum = 0;
+        let SRM = 0;
+
+        for (let i = 0; i < fermAmounts.length; i++) {
+          MCU.push((fermAmounts[i] * fermData[i].color)/volume);
+          MCUsum = MCU.reduce((pv, cv) => pv + cv, 0);
+        }
+          SRM = 1.4922 * (MCUsum ** 0.6859)
+          console.log(SRM)
+
+          setSRM(SRM)
+          
+        //    if (SRM.isNAN) {console.log(SRM)}
+        //    else {console.log("not a number")}
+         
+  }
+
 
 
     // -----------------------Add Fermentable to Recipe List-----------------------------------------------------
@@ -146,7 +196,7 @@ function RecipeCalc(props) {
 
                     <div>
                         <label for="batchvol">Batch Volume:</label>
-                        <input name="batchvol" id="batchvol" type='number' className='recipe-input'></input><span>gal</span>
+                        <input name="batchvol" id="batchvol" type='numeric' className='recipe-input' onChange={handleVolChange} value={volume}></input><span>gal</span>
                     </div>
 
                     <div>
@@ -177,8 +227,11 @@ function RecipeCalc(props) {
                 </div>
                 <h2 onClick={addFerm}>+</h2>
                 <div>
-                    <h3>Total Grain</h3>
-                    <p>{grainTotal} lbs</p>
+                    <h3>Total Grain {grainTotal} lbs</h3>
+                </div>
+                <div>
+                    <h3>Color: {srm} SRM</h3>
+                   
                 </div>
 
 
