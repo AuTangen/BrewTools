@@ -10,22 +10,30 @@ import AddFerm from '../components/AddFerm';
 
 function RecipeCalc(props) {
 
+
+
     const [volume, setVolume] = useState(5)
     const [grainTotal, setGrainTotal] = useState()
     const [gristPercent, setGristPercent] = useState()
     const [fermAmounts, setFermAmounts] = useState([])
     const [fermData, setFermData] = useState([])
+    const [gravity, setGravity] = useState()
     const [srm, setSRM] = useState()
+    const [efficiency, setEfficiency] = useState()
 
     const ref = React.useRef(null)
 
 
-    const handleVolChange = (event) => {
-        console.log(event.target.value)
-        setVolume(event.target.value)
+    useEffect(() => {
+        fetchData()
+    }, [fermData])
+
+    const handleEffChange = (event) => {
+        setEfficiency(event.target.value * .01)
     }
 
-    const handleGrainChange = () => {
+    const handleGrainChange = (event) => {
+        event.preventDefault()
 
         var divObject = ref.current.children
         var grainInput = Array.from(ref.current.children)
@@ -41,7 +49,7 @@ function RecipeCalc(props) {
 
 
         }
-        
+
 
         let percentArray = [];
         var arrayNumbers = valueArray.map(Number)
@@ -51,58 +59,92 @@ function RecipeCalc(props) {
                 console.log('row ' + i + ' ' + percentArray[i])
                 divObject[i].children[3].innerHTML = percentArray[i] + '%'
             }
-            
-        
+
+
         });
 
-        
+
         setGrainTotal(sum)
         setFermAmounts(arrayNumbers)
 
-        getFermData();
+        
 
-            
-        
-        
-        
-       
-       
+        // getFermData();
+
+        console.log("called grainchange")
+
+
+
+
+
 
     }
+    const fetchData = async () => {
+        let fermDataArray = []
+        for (let i = 0; i < ref.current.children.length; i++) {
+            let response = await axios.get(`/api/fermentable/${ref.current.children[i].children[2].value}`)
 
+            fermDataArray.push(response.data)
+
+
+        }
+
+        setFermData(fermDataArray)
+
+    }
     // -----------------------------------------------------------
 
-  const getFermData = async () => {
-    let fermDataArray = []
-        for (let i = 0; i < ref.current.children.length; i++) {
-        axios.get(`/api/fermentable/${ref.current.children[i].children[2].value}`).then(res => {
-            fermDataArray.push(res.data)
-            
-        })
-    }
-        setFermData(fermDataArray)
+    const getFermData = async () => {
+        await fetchData();
+
         console.log(fermData)
         const MCU = [];
         let MCUsum = 0;
         let SRM = 0;
 
         for (let i = 0; i < fermAmounts.length; i++) {
-          MCU.push((fermAmounts[i] * fermData[i].color)/volume);
-          MCUsum = MCU.reduce((pv, cv) => pv + cv, 0);
+            MCU.push((fermAmounts[i] * fermData[i].color) / volume);
+            MCUsum = MCU.reduce((pv, cv) => pv + cv, 0);
         }
-          SRM = 1.4922 * (MCUsum ** 0.6859)
-          console.log(SRM)
+        SRM = 1.4922 * (MCUsum ** 0.6859)
+        // console.log(SRM)
 
-          setSRM(SRM)
-          
+        setSRM(SRM)
+
         //    if (SRM.isNAN) {console.log(SRM)}
         //    else {console.log("not a number")}
-         
-  }
+
+        
+
+        const gravity = []
+        let FG = 0
+        let gravitySum = 0
+        for (let i = 0; i < fermAmounts.length; i++) {
+            // I entered the info wrong in the database, we can omit this slice/convert when we deploy the new DB
+            var slice = String(fermData[i].extractPot).slice(3)
+            var gravPot = (slice * efficiency)
+            gravity.push((fermAmounts[i] * gravPot));
+            gravitySum = gravity.reduce((pv, cv) => pv + cv, 0);
+
+        }
+        FG =((gravitySum / volume) * .001) + 1
+        console.log(FG)
+    }
 
 
+
+    // -------------------Volume Change------------------------------------------------------
+
+    const handleVolChange = (event) => {
+        event.preventDefault()
+        console.log(event.target.value)
+        setVolume(event.target.value)
+
+
+    }
 
     // -----------------------Add Fermentable to Recipe List-----------------------------------------------------
+
     const [inputList, setInputList] = useState([<AddFerm key={0} />]);
 
     const addFerm = (event) => {
@@ -176,8 +218,8 @@ function RecipeCalc(props) {
     }
 
     //  -------------------------------------------------------------------------------------------
-    
-   
+
+
 
 
     return (
@@ -186,7 +228,7 @@ function RecipeCalc(props) {
                 <div className='calc-header-wrap'>
                     <div className='calc-header'>
                         <h3>Recipe Calculator</h3>
-                        <button id="savebtn">Save</button>
+                        {/* <button id="savebtn">Save</button> */}
                     </div>
 
                     <div>
@@ -211,8 +253,9 @@ function RecipeCalc(props) {
 
                     <div>
                         <label for="efficiency">Efficiency:</label>
-                        <input id="efficiency" type='number' className='recipe-input'></input><span>%</span>
+                        <input onChange={handleEffChange} value={efficiency} id="efficiency" type='number' className='recipe-input'></input><span>%</span>
                     </div>
+                    <h2 onClick={getFermData}>Calculate!</h2>
                 </div>
                 {/* Select expects a string, cant use variable object. store value as a name or id# and make an axios request to fineOne() to get the full object*/}
                 <div className='calc-ferm' onClick={handleGrainChange}>
@@ -226,13 +269,18 @@ function RecipeCalc(props) {
 
                 </div>
                 <h2 onClick={addFerm}>+</h2>
+
                 <div>
                     <h3>Total Grain {grainTotal} lbs</h3>
                 </div>
-                <div>
+                <section className='stats-output'>
+                    <h3>OG: </h3>
+                    <h3>FG: </h3>
                     <h3>Color: {srm} SRM</h3>
-                   
-                </div>
+
+
+
+                </section>
 
 
                 <div className='calc-hops'>
