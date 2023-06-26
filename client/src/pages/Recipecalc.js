@@ -2,6 +2,7 @@ import React, { useState, useEffect, useId } from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import AddFerm from '../components/AddFerm';
+import AddHops from '../components/AddHops';
 
 
 
@@ -18,22 +19,34 @@ function RecipeCalc(props) {
     const [fermAmounts, setFermAmounts] = useState([])
     const [fermData, setFermData] = useState([])
     const [gravity, setGravity] = useState()
+    const [finGravity, setFinGravity] = useState()
+    const [abv, setABV] = useState(0.0)
     const [srm, setSRM] = useState()
-    const [efficiency, setEfficiency] = useState()
+    const [IBUs, setIBUs] = useState(0)
+    const [efficiency, setEfficiency] = useState(75)
+    const [attenuation, setAttenuation] = useState(75)
+    
+    
 
     const ref = React.useRef(null)
+
+    const hopref = React.useRef(null)
 
 
     useEffect(() => {
         fetchData()
     }, [fermData])
 
+    useEffect(() => {
+        handleGrainChange()
+    }, [grainTotal])
+
     const handleEffChange = (event) => {
-        setEfficiency(event.target.value * .01)
+        setEfficiency(event.target.value)
     }
 
     const handleGrainChange = (event) => {
-        event.preventDefault()
+      
 
         var divObject = ref.current.children
         var grainInput = Array.from(ref.current.children)
@@ -56,7 +69,7 @@ function RecipeCalc(props) {
         arrayNumbers.forEach(function (num) {
             percentArray.push(num / sum * 100);
             for (let i = 0; i < percentArray.length; i++) {
-                console.log('row ' + i + ' ' + percentArray[i])
+              
                 divObject[i].children[3].innerHTML = percentArray[i] + '%'
             }
 
@@ -69,12 +82,7 @@ function RecipeCalc(props) {
 
         
 
-        // getFermData();
-
-        console.log("called grainchange")
-
-
-
+       
 
 
 
@@ -92,12 +100,12 @@ function RecipeCalc(props) {
         setFermData(fermDataArray)
 
     }
-    // -----------------------------------------------------------
-
-    const getFermData = async () => {
+    // -----------run calc------------------------------------
+    
+    const calculate = async () => {
         await fetchData();
-
-        console.log(fermData)
+// SRM CALC
+        
         const MCU = [];
         let MCUsum = 0;
         let SRM = 0;
@@ -106,29 +114,74 @@ function RecipeCalc(props) {
             MCU.push((fermAmounts[i] * fermData[i].color) / volume);
             MCUsum = MCU.reduce((pv, cv) => pv + cv, 0);
         }
-        SRM = 1.4922 * (MCUsum ** 0.6859)
-        // console.log(SRM)
-
+        SRM = (1.4922 * (MCUsum ** 0.6859)).toFixed(2)
+        
+        console.log("SRM " + SRM)
         setSRM(SRM)
 
-        //    if (SRM.isNAN) {console.log(SRM)}
-        //    else {console.log("not a number")}
-
+   
         
-
-        const gravity = []
+// GRAVITY & ABV CALC
+        const gravityArray = []
+        let OG = 0
         let FG = 0
         let gravitySum = 0
         for (let i = 0; i < fermAmounts.length; i++) {
-            // I entered the info wrong in the database, we can omit this slice/convert when we deploy the new DB
+            
             var slice = String(fermData[i].extractPot).slice(3)
-            var gravPot = (slice * efficiency)
-            gravity.push((fermAmounts[i] * gravPot));
-            gravitySum = gravity.reduce((pv, cv) => pv + cv, 0);
+            var effPerc = efficiency * .01
+            var gravPot = (slice * effPerc)
+            gravityArray.push((fermAmounts[i] * gravPot));
+            gravitySum = gravityArray.reduce((pv, cv) => pv + cv, 0);
 
         }
-        FG =((gravitySum / volume) * .001) + 1
-        console.log(FG)
+        
+        OG =((gravitySum / volume) * .001) + 1
+        var OGslice = String(OG).slice(0,5)
+        var OGwhole = String(OGslice).slice(2)
+      
+        FG = ((OGwhole * .001) * ((100 - attenuation) * .01)) + 1
+        var FGslice = String(FG).slice(0,5)
+        
+        var abvCalc = (OGslice - FGslice) * 133
+        var abvSlice = abvCalc.toFixed(2)
+        
+        setGravity(OGslice)
+        setFinGravity(FGslice)
+        setABV(abvSlice)
+
+//   IBU CALC
+        let ibuArray = []
+        let IBU = 0
+        let AAU = 0
+        let gravFactor = 0
+        let boilFactor = 0
+        let utilization = 0
+        let ibuSum = 0
+                
+        for (let i = 0; i < hopref.current.children.length; i++) {
+           
+                gravFactor = (1.65 * 0.000125)**(OGslice - 1)
+                boilFactor = (1-2.718**(-0.04 * hopref.current.children[i].children[5].value)) / 4.15
+
+                utilization = (gravFactor * boilFactor)
+
+                AAU = (hopref.current.children[i].children[0].value * hopref.current.children[i].children[2].value)
+
+                IBU = (AAU * utilization *75)/volume
+
+                ibuArray.push(IBU.toFixed(1))
+                                        
+        }
+        
+       
+        ibuSum = ibuArray.reduce((pv, cv) => pv + cv, 0) ;
+
+        setIBUs(ibuSum)
+
+
+
+        
     }
 
 
@@ -154,9 +207,15 @@ function RecipeCalc(props) {
     };
 
 
-    // ---------------------------------------------------------------------------------------------------------
+    // ---------------------Add hop to Recipe List----------------------------------------------------------------------------------
 
-    const [amount, setAmount] = useState(0)
+    const [hopInputList, setHopInputList] = useState([<AddHops key={0} />]);
+
+    const addHop = (event) => {
+        setHopInputList(hopInputList.concat(<AddHops key={hopInputList.length} />));
+
+
+    };
 
     // ---------------------------get all fermentables on page load-------------------------------------------------------
     const [fermentable, setFermentable] = useState([]);
@@ -217,6 +276,45 @@ function RecipeCalc(props) {
         }
     }
 
+    // ----------------------Add new Hop to database---------------------------------------------
+
+    const [hopFormState, setHopFormState] = useState({
+        name: '',
+        alphaAcid: ''
+    })
+
+    const handleNewHop = (event) => {
+        const hop = event.target.name
+        setHopFormState({
+            ...hopFormState,
+            [hop]: event.target.value
+        });
+    }
+
+
+
+    const createHop = async (event) => {
+        event.preventDefault();
+
+        try {
+            const res = await axios.post('/api/hops', hopFormState);
+
+
+
+            setHopFormState({
+                name: '',
+                alphaAcid: ''
+            })
+            console.log('New Hop Created')
+            console.log(hopFormState)
+
+        } catch (err) {
+            if (err.code === 402) {
+                setErrMessage(err.response.data.error)
+            }
+        }
+    }
+
     //  -------------------------------------------------------------------------------------------
 
 
@@ -255,7 +353,7 @@ function RecipeCalc(props) {
                         <label for="efficiency">Efficiency:</label>
                         <input onChange={handleEffChange} value={efficiency} id="efficiency" type='number' className='recipe-input'></input><span>%</span>
                     </div>
-                    <h2 onClick={getFermData}>Calculate!</h2>
+                    <h2 onClick={calculate}>Calculate!</h2>
                 </div>
                 {/* Select expects a string, cant use variable object. store value as a name or id# and make an axios request to fineOne() to get the full object*/}
                 <div className='calc-ferm' onClick={handleGrainChange}>
@@ -274,9 +372,12 @@ function RecipeCalc(props) {
                     <h3>Total Grain {grainTotal} lbs</h3>
                 </div>
                 <section className='stats-output'>
-                    <h3>OG: </h3>
-                    <h3>FG: </h3>
-                    <h3>Color: {srm} SRM</h3>
+                    <h3>OG: {gravity}</h3>
+                    <h3>FG: {finGravity}</h3>
+                    <h3>ABV: {abv} %</h3>
+                    <h3>Color: {srm} SRM</h3><span>*image output*</span>
+                    <h3>IBUs: {IBUs}</h3>
+                    
 
 
 
@@ -284,6 +385,10 @@ function RecipeCalc(props) {
 
 
                 <div className='calc-hops'>
+                    <h2>Hops</h2>
+                    <div id="hop-list" ref={hopref}>
+                    {hopInputList}
+                    </div>
 
                 </div>
 
@@ -300,16 +405,23 @@ function RecipeCalc(props) {
                 {errMessage && <p>{errMessage}</p>}
                 <input name='name' value={formState.name} onChange={handleNewFerm} type="text" placeholder="Enter Fermentable name"></input>
                 <input name='category' value={formState.category} onChange={handleNewFerm} type="text" placeholder="Enter a category"></input>
-                {/* <select onChange={handleNewFerm} name="category" id="category">
-                    <option>Select Fermentable Type</option>
-                    <option value="Grain">Grain</option>
-                    <option value="Adjunct">Adjunct</option>
-                    <option value="Malt Extract">Malt Extract</option>
-                </select> */}
+            
                 <input name='color' value={formState.color} onChange={handleNewFerm} type="number" placeholder="Color (Lovibond)"></input>
                 <input name='extractPot' value={formState.extractPot} onChange={handleNewFerm} type="number" placeholder="Extract Potential (SG)"></input>
                 <button>Create Fermentable</button>
             </form>
+
+
+            <form onSubmit={createHop}>
+                <h2>Create New Hop Object</h2>
+                <h4>for testing purposes only</h4>
+                {errMessage && <p>{errMessage}</p>}
+                <input name='name' value={hopFormState.name} onChange={handleNewHop} type="text" placeholder="Enter Hop name"></input>
+                <input name='alphaAcid' value={hopFormState.alphaAcid} onChange={handleNewHop} type="numeric" placeholder="Enter alpha acid %"></input>
+                
+                <button>Create Hop</button>
+            </form>
+            <h2 onClick={addHop}>+</h2>
 
         </section>
     )

@@ -1,6 +1,8 @@
 const router = require('express').Router();
 
 const Fermentable = require('../models/Fermentables')
+const Hops = require('../models/Hops')
+const Yeast = require('../models/Yeast')
 
 function isAuthenticated(req, res, next) {
   if (!req.session.user_id) 
@@ -24,6 +26,57 @@ router.get('/fermentable/:name', async (req,res) => {
   fermentable = await Fermentable.findOne({name: req.params.name})
   res.send(fermentable)
 })
+
+
+// get all hops for dropdown list
+router.get('/hops', async (req,res) => {
+  hops = await Hops.find();
+  res.send(hops)
+  
+});
+
+// get one hop
+router.get('/hops/:name', async (req,res) => {
+  hop = await Hops.findOne({name: req.params.name})
+  res.send(hop)
+})
+
+
+
+// // add a new fermentable to the list
+router.post('/fermentables', async (req, res) => {
+
+  try {
+    const fermentable = await Fermentable.create({
+      ...req.body,
+     
+     });
+     res.send('Fermentable Created')
+  console.log(fermentable)
+    
+  } catch {
+  res.status(402).send({ error: err})
+  }
+  });
+
+  // // add a new hop to the list
+router.post('/hops', async (req, res) => {
+
+  try {
+    const hop = await Hops.create({
+      ...req.body,
+     
+     });
+     res.send('Hop Created')
+  console.log(hop)
+    
+  } catch {
+  res.status(402).send({ error: err})
+  }
+  });
+  
+  
+
 
 // // get all drinks or get by search query
 // router.get('/drinks', async (req, res) => {
@@ -92,21 +145,6 @@ router.get('/fermentable/:name', async (req,res) => {
  
 // })
 
-// // create a drink and adds it to the users favorites
-router.post('/fermentables', async (req, res) => {
-
-try {
-  const fermentable = await Fermentable.create({
-    ...req.body,
-   
-   });
-   res.send('Fermentable Created')
-console.log(fermentable)
-  
-} catch {
-res.status(402).send({ error: err})
-}
-});
 
 
 

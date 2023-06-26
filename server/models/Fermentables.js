@@ -22,6 +22,6 @@ const fermentableSchema = new Schema({
 })
 
 
-const Fermentable = model('drink', fermentableSchema)
+const Fermentable = model('fermentable', fermentableSchema)
 
 module.exports = Fermentable
