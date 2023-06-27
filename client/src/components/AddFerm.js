@@ -70,11 +70,11 @@ function AddFerm(props) {
 
     return (
         <div name={id} ref={ref}>
-            <input id={id} value={input} onChange={handleChange} name="amount" type='numeric' placeholder='0'></input><span>lb</span>
+            <input className='input-small' id={id} value={input} onChange={handleChange} name="amount" type='numeric' placeholder='0'></input><span>lb</span>
             <select name="fermentables" id="fermentables" >
                 <option>Select Fermentable</option>
                 {fermentable.map(outputFermentables)}
-            </select>
+            </select><span className='err-catch'>You must select a grain type!</span>
             <p name="percentOutput">%</p>
             
             <BsFillTrash3Fill onClick={deleteFerm}/>

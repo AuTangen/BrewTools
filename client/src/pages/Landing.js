@@ -18,6 +18,8 @@ function Landing(props) {
            <NavLink to="/recipecalc"><img src={cap} className="start" id='start' alt="start" /></NavLink>
            <h2 id='start-text' className='start-text centered'>Start</h2>
            </div>
+
+           <NavLink to="/apitesting"><h2>To API Testing Ground</h2></NavLink>
         </section>
     )
 }

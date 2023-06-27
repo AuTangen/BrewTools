@@ -26,7 +26,7 @@ function RecipeCalc(props) {
     const [efficiency, setEfficiency] = useState(75)
     const [attenuation, setAttenuation] = useState(75)
     
-    
+    const [showErr, setShowErr] = useState(false);
 
     const ref = React.useRef(null)
 
@@ -65,12 +65,13 @@ function RecipeCalc(props) {
 
 
         let percentArray = [];
+        
         var arrayNumbers = valueArray.map(Number)
         arrayNumbers.forEach(function (num) {
-            percentArray.push(num / sum * 100);
+            percentArray.push((num / sum * 100).toFixed(2))
             for (let i = 0; i < percentArray.length; i++) {
               
-                divObject[i].children[3].innerHTML = percentArray[i] + '%'
+                divObject[i].children[4].innerHTML = percentArray[i] + '%'
             }
 
 
@@ -92,7 +93,11 @@ function RecipeCalc(props) {
         for (let i = 0; i < ref.current.children.length; i++) {
             let response = await axios.get(`/api/fermentable/${ref.current.children[i].children[2].value}`)
 
+            
+             
             fermDataArray.push(response.data)
+                
+           
 
 
         }
@@ -103,6 +108,7 @@ function RecipeCalc(props) {
     // -----------run calc------------------------------------
     
     const calculate = async () => {
+       handleGrainChange();
         await fetchData();
 // SRM CALC
         
@@ -111,8 +117,16 @@ function RecipeCalc(props) {
         let SRM = 0;
 
         for (let i = 0; i < fermAmounts.length; i++) {
+            if (!fermData[i].color) {
+
+                setShowErr(!showErr)
+                return;
+            }
+            else {
+                setShowErr(false)
             MCU.push((fermAmounts[i] * fermData[i].color) / volume);
             MCUsum = MCU.reduce((pv, cv) => pv + cv, 0);
+        }
         }
         SRM = (1.4922 * (MCUsum ** 0.6859)).toFixed(2)
         
@@ -171,17 +185,14 @@ function RecipeCalc(props) {
                 IBU = (AAU * utilization *75)/volume
 
                 ibuArray.push(IBU.toFixed(1))
+               
                                         
         }
         
-       
-        ibuSum = ibuArray.reduce((pv, cv) => pv + cv, 0) ;
-
-        setIBUs(ibuSum)
-
-
-
-        
+        ibuSum = ibuArray.map(Number).reduce((pv, cv) => pv + cv) ;
+     
+            setIBUs(ibuSum)
+         
     }
 
 
@@ -232,96 +243,10 @@ function RecipeCalc(props) {
             <option key={fermentable._id} name={fermentable.name}>{fermentable.name}</option>
         )
     }
-    // -------------------------add new fermentable to database----------------------------------------------------------------
-    const [errMessage, setErrMessage] = useState('')
-
-    const [formState, setFormState] = useState({
-        name: '',
-        category: '',
-        color: '',
-        extractPot: ''
-    })
-
-    const handleNewFerm = (event) => {
-        const prop = event.target.name
-        setFormState({
-            ...formState,
-            [prop]: event.target.value
-        });
-    }
-
-
-
-    const createFermentable = async (event) => {
-        event.preventDefault();
-
-        try {
-            const res = await axios.post('/api/fermentables', formState);
-
-
-
-            setFormState({
-                name: '',
-                category: '',
-                color: '',
-                extractPot: ''
-            })
-            console.log('New Fermentable Created')
-            console.log(formState)
-
-        } catch (err) {
-            if (err.code === 402) {
-                setErrMessage(err.response.data.error)
-            }
-        }
-    }
-
-    // ----------------------Add new Hop to database---------------------------------------------
-
-    const [hopFormState, setHopFormState] = useState({
-        name: '',
-        alphaAcid: ''
-    })
-
-    const handleNewHop = (event) => {
-        const hop = event.target.name
-        setHopFormState({
-            ...hopFormState,
-            [hop]: event.target.value
-        });
-    }
-
-
-
-    const createHop = async (event) => {
-        event.preventDefault();
-
-        try {
-            const res = await axios.post('/api/hops', hopFormState);
-
-
-
-            setHopFormState({
-                name: '',
-                alphaAcid: ''
-            })
-            console.log('New Hop Created')
-            console.log(hopFormState)
-
-        } catch (err) {
-            if (err.code === 402) {
-                setErrMessage(err.response.data.error)
-            }
-        }
-    }
-
-    //  -------------------------------------------------------------------------------------------
-
-
-
+//   ---------------------------------------------------------------------------------------------------------------------
 
     return (
-        <section className='calc-container'>
+        <section className='calc-container' >
             <form>
                 <div className='calc-header-wrap'>
                     <div className='calc-header'>
@@ -355,8 +280,19 @@ function RecipeCalc(props) {
                     </div>
                     <h2 onClick={calculate}>Calculate!</h2>
                 </div>
-                {/* Select expects a string, cant use variable object. store value as a name or id# and make an axios request to fineOne() to get the full object*/}
-                <div className='calc-ferm' onClick={handleGrainChange}>
+                <section className='stats-output'>
+                    <h3>OG: {gravity}</h3>
+                    <h3>FG: {finGravity}</h3>
+                    <h3>ABV: {abv} %</h3>
+                    <h3>Color: {srm} SRM</h3><span>*image output*</span>
+                    <h3>IBUs: {IBUs}</h3>
+                    
+
+
+
+                </section>
+                {showErr && (<h2>You must select a grain type!</h2>)}
+                <div className='calc-ferm' onClick={handleGrainChange} onBlur={handleGrainChange}>
                     <h2>Fermentables</h2>
 
                     <div id="fermlist" ref={ref}>
@@ -371,25 +307,15 @@ function RecipeCalc(props) {
                 <div>
                     <h3>Total Grain {grainTotal} lbs</h3>
                 </div>
-                <section className='stats-output'>
-                    <h3>OG: {gravity}</h3>
-                    <h3>FG: {finGravity}</h3>
-                    <h3>ABV: {abv} %</h3>
-                    <h3>Color: {srm} SRM</h3><span>*image output*</span>
-                    <h3>IBUs: {IBUs}</h3>
-                    
+          
 
 
-
-                </section>
-
-
-                <div className='calc-hops'>
+                <div className='hop-calc'>
                     <h2>Hops</h2>
                     <div id="hop-list" ref={hopref}>
                     {hopInputList}
                     </div>
-
+                    <h2 onClick={addHop}>+</h2>
                 </div>
 
                 <div className='calc-yeast'>
@@ -399,29 +325,7 @@ function RecipeCalc(props) {
             </form>
 
 
-            <form onSubmit={createFermentable}>
-                <h2>Create New Fermentable Object</h2>
-                <h4>for testing purposes only</h4>
-                {errMessage && <p>{errMessage}</p>}
-                <input name='name' value={formState.name} onChange={handleNewFerm} type="text" placeholder="Enter Fermentable name"></input>
-                <input name='category' value={formState.category} onChange={handleNewFerm} type="text" placeholder="Enter a category"></input>
-            
-                <input name='color' value={formState.color} onChange={handleNewFerm} type="number" placeholder="Color (Lovibond)"></input>
-                <input name='extractPot' value={formState.extractPot} onChange={handleNewFerm} type="number" placeholder="Extract Potential (SG)"></input>
-                <button>Create Fermentable</button>
-            </form>
-
-
-            <form onSubmit={createHop}>
-                <h2>Create New Hop Object</h2>
-                <h4>for testing purposes only</h4>
-                {errMessage && <p>{errMessage}</p>}
-                <input name='name' value={hopFormState.name} onChange={handleNewHop} type="text" placeholder="Enter Hop name"></input>
-                <input name='alphaAcid' value={hopFormState.alphaAcid} onChange={handleNewHop} type="numeric" placeholder="Enter alpha acid %"></input>
-                
-                <button>Create Hop</button>
-            </form>
-            <h2 onClick={addHop}>+</h2>
+                    
 
         </section>
     )

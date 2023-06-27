@@ -102,3 +102,40 @@ color: var(--back-color);
   padding: 2%;
 
 }
+
+input {
+  padding: .5%;
+  border-radius: 4px;
+}
+
+select {
+  padding: .5%;
+  border-radius: 4px;
+}
+
+.input-small {
+  width: 20px;
+}
+
+.stats-output {
+  display: flex;
+  
+}
+
+
+.stats-output h3 {
+ margin: 0 5%;
+  
+}
+
+.calc-ferm {
+  background-color: chocolate;
+  padding: 2%;
+  border-radius: 10px;
+}
+
+.hop-calc {
+  background-color: chocolate;
+  padding: 2%;
+  border-radius: 10px;
+}
