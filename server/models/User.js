@@ -26,7 +26,7 @@ const userSchema = new Schema({
     min: 6,
 
   },
-  favorites: [
+  myRecipes: [
     {
       type: Schema.Types.ObjectId,
       ref: 'recipe'

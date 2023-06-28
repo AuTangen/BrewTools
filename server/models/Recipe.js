@@ -1,29 +1,45 @@
-// const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose')
 
-// const drinkSchema = new Schema({
-//     name: {
-//         type: String,
-//         required: true
-//     },
-//     category: {
-//         type: String,
-//         required: true
-//     },
-//     ingredients: {
-//         type: String,
-//         required: true
-//     },
-//     instructions: {
-//         type: String,
-//         required: true
-//     },
-//     user: {
-//         type: Schema.Types.ObjectId,
-//         ref: 'user'
-//     }
+const recipeSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    style: {
+        type: String,
+      
+    },
+    og: {
+        type: Number
+    },
+    fg: {
+        type: Number
+    },
+    abv: {
+        type: Number
+    },
+    color: {
+        type: Number
+    },
+    ibus: {
+         type: Number
+    },
+    fermentables: [{
+        
+    }],
+    hops: [{
+        
+    }],
+    yeast: {
+       
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    }
 
-// })
+})
 
-// const Drink = model('drink', drinkSchema)
+const Recipe = model('recipe', recipeSchema)
 
-// module.exports = Drink
+module.exports = Recipe

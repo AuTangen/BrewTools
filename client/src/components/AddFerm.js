@@ -9,11 +9,7 @@ function AddFerm(props) {
 
     
     const ref = React.useRef(null)
-    useEffect(() => {
-        
-        // console.log("value " + ref.current.value);
-      }, []);
-
+   
     const id = useId();
 
     const [input, setInput] = useState(0);
@@ -26,18 +22,27 @@ function AddFerm(props) {
     }
 
    
-// ----------------------------------------------------------------------------
+// ----------grain type fetch on change---------------------------------------------------------
 
     const [fermentable, setFermentable] = useState([]);
+    const [SRM, setSRM] = useState(0)
+    const [extractPot, setExtractPot] = useState(0)
 
-    const [value, setValue] = useState(0);
-
-    const updateValue = (event) => {
-        setValue(event.target.value)
+    const fetchData = async () => {
+       console.log(ref.current.children[2].value)
+        await axios.get(`/api/fermentable/${ref.current.children[1].value}`)
+            .then(res => {
+                setSRM(res.data.color)
+                setExtractPot(res.data.extractPot)
+                console.log(SRM)
+                console.log(extractPot)
+                
+            });
+            
+           
     }
-
-
-
+  
+// ---------------------------------------------------------------------------------------------------
     useEffect(() => {
         axios.get('/api/fermentables')
             .then(res => {
@@ -54,30 +59,24 @@ function AddFerm(props) {
 
     const deleteFerm = () => {
         ref.current.remove();
-    }
-// ---------------grain type fetch----------------------------------------------------
 
-// const handleSelectChange = async () => {
-//     console.log(ref.current.children[2].value)
-//     axios.get(`/api/fermentable/${ref.current.children[2].value}`).then(res => {
-//         console.log("res ", res.data);
-//         console.log(ref.current)
-//     }
-            
-//         )
-   
-//     };
+    }
+// -------------------------------------------------------------------
+
+
 
     return (
-        <div name={id} ref={ref}>
-            <input className='input-small' id={id} value={input} onChange={handleChange} name="amount" type='numeric' placeholder='0'></input><span>lb</span>
-            <select name="fermentables" id="fermentables" >
+        <div name={id} ref={ref}  className='calc-grid form-item'>
+            <input className='input-small' id={id} value={input} onChange={handleChange} name="amount" type='numeric' placeholder='0'></input>
+            <select name="fermentables" id="fermentables" onChange={fetchData}>
                 <option>Select Fermentable</option>
                 {fermentable.map(outputFermentables)}
-            </select><span className='err-catch'>You must select a grain type!</span>
+            </select>
             <p name="percentOutput">%</p>
+            <input value={SRM} className='hidden' readOnly></input>
+            <input value={extractPot} className='hidden' readOnly></input>
             
-            <BsFillTrash3Fill onClick={deleteFerm}/>
+            <BsFillTrash3Fill className='interact' onClick={deleteFerm}/>
             
         </div>
     )

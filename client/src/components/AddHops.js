@@ -21,7 +21,7 @@ function AddHops(props) {
 
     const fetchData = async () => {
        
-        await axios.get(`/api/hops/${ref.current.children[4].value}`)
+        await axios.get(`/api/hops/${ref.current.children[2].value}`)
             .then(res => {
                 setAlpha(res.data.alphaAcid)
                 
@@ -66,16 +66,16 @@ const handleDurChange = (event) => {
 
 
     return (
-        <div name={id} ref={ref}>
-            <input id={id} name="amount" type='numeric' placeholder='0'></input><span>oz</span>
-            <input name="alpha" type="numeric" value={alpha} onChange={handleAlphaChange}></input><span> %aa</span>
+        <div name={id} ref={ref} className='calc-grid-hop form-item'>
+            <input className='input-small' id={id} name="amount" type='numeric' placeholder='0'></input>
+            <input className='input-small' name="alpha" type="numeric" value={alpha} onChange={handleAlphaChange}></input>
             <select name="hop" id="hop" onChange={fetchData} >
                 <option>Select Hop</option>
                 {hop.map(outputHops)}
             </select>
-            <input name="duration" type="numeric" value={duration} onChange={handleDurChange}></input><span>min</span>            
+            <input className='input-small' name="duration" type="numeric" value={duration} onChange={handleDurChange}></input>          
             
-            <BsFillTrash3Fill onClick={deleteHop}/>
+            <BsFillTrash3Fill className='interact' onClick={deleteHop}/>
             
         </div>
     )

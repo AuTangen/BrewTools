@@ -1,7 +1,13 @@
 
 :root {
   --text-color:rgb(255, 255, 255);
-  --back-color: #fcebbc
+  --back-color: #fcebbc;
+  /* --back-color: #f0dabe; */
+  /* --back-color: #7EA8BEs */
+}
+
+* {
+  margin: 0 auto;
 }
 
 body {
@@ -10,8 +16,10 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     background-color: var(--back-color);
+    ;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #242325
 }
 
 code {
@@ -29,6 +37,55 @@ code {
   top: 30%;
   left: 27%;
   transform: translate(-50%, -50%);
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 3fr 3fr 3fr 3fr;
+  align-items: center;
+}
+
+.calc-grid-hop {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 2fr 2fr;
+  align-items: center;
+}
+
+.form-item {
+  border-bottom: solid #175676 2px;
+  width: 90%;
+  padding: 3%;
+}
+.form-item > * {
+  margin: 0 5px
+  }
+
+  input {
+    padding: .5%;
+    border-radius: 4px;
+    height: fit-content;  
+    border: solid #175676 2px;
+    
+  }
+  
+  select {
+    padding: .5%;
+    border-radius: 4px;
+    height: fit-content;
+    width: fit-content;
+    border: solid #175676 2px;
+    background-color: #175676;
+    color: white;
+    }
+
+  .interact {
+    cursor: pointer;
+    width: fit-content;
+    
+  }
+
+.hidden {
+  display: none;
 }
 /* CUSTOM CLASSES */
 
@@ -65,11 +122,30 @@ color: var(--back-color);
   text-align: center;
 }
 
+nav {
+  display: flex;
+  justify-content: right;
+  
+ 
+
+}
+
+nav img {
+  width: 20%;
+}
+
+
+nav li {
+  text-decoration: none;
+  list-style: none;
+}
+
 .calc-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 10%;
+  margin-top: 2%;
   
  
 }
@@ -88,7 +164,7 @@ color: var(--back-color);
   width: fit-content;
   padding: 5%;
   border-radius: 10px;
-  background-color:ivory;
+  /* background-color:ivory; */
 }
 
 .recipe-input {
@@ -103,18 +179,21 @@ color: var(--back-color);
 
 }
 
-input {
-  padding: .5%;
-  border-radius: 4px;
+.form-header {
+  /* background-color: #175676 ; */
+  /* border-radius: 6px; */
+  
+ 
+  color: #175676;
+  padding: 1%;
 }
 
-select {
-  padding: .5%;
-  border-radius: 4px;
+.form-header h4 {
+  margin-left: 1%;
 }
 
 .input-small {
-  width: 20px;
+  width: 28px;
 }
 
 .stats-output {
@@ -128,14 +207,17 @@ select {
   
 }
 
-.calc-ferm {
-  background-color: chocolate;
-  padding: 2%;
+
+
+.ferm-calc {
+  /* background-color: #cbe2ee ; */
+  border: solid #175676 4px;
   border-radius: 10px;
+  margin-bottom: 2%;;
 }
 
 .hop-calc {
-  background-color: chocolate;
-  padding: 2%;
+  /* background-color: #cbe2ee ; */
+  border: solid #175676 4px;
   border-radius: 10px;
 }

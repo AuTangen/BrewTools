@@ -5,9 +5,15 @@ const User = require('../models/User');
 
 router.post('/register', async (req, res) => {
   try {
-    const user = await User.create(req.body).populate('favorites');
+    const user = await User.create(req.body)
+    // .populate({
+    //     path: 'myRecipes',
+    //     populate: 'user'
+    //   });;
 
     req.session.user_id = user._id;
+    console.log(user._id)
+    console.log(user.username)
     res.send({user})
   } catch (err) {
     res.status(402).send({error: err})
@@ -20,7 +26,7 @@ router.post('/login', async (req, res) => {
       const user = await User.findOne({
         email: req.body.email
       }).populate({
-        path: 'favorites',
+        path: 'myRecipes',
         populate: 'user'
       });
 //   if no user is found, send error message
@@ -50,7 +56,7 @@ router.get('/authenticated', async (req, res) => {
     if (!user_id) return res.send({user: null})
 
     const user = await User.findById(user_id).populate({
-      path: 'favorites',
+      path: 'myRecipes',
       populate: 'user'
     });
 

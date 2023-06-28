@@ -3,6 +3,8 @@ const router = require('express').Router();
 const Fermentable = require('../models/Fermentables')
 const Hops = require('../models/Hops')
 const Yeast = require('../models/Yeast')
+const Recipe = require('../models/Recipe')
+const User = require('../models/User')
 
 function isAuthenticated(req, res, next) {
   if (!req.session.user_id) 
@@ -75,7 +77,50 @@ router.post('/hops', async (req, res) => {
   }
   });
   
-  
+  // save recipe to user
+// send just the json name or send the whole ferm objecT???
+  router.post('/myrecipes', isAuthenticated, async (req, res) => {
+    const user_id = req.session.user_id
+    // let fermentables = []
+    console.log(req.body)
+    // for (let i = 0; i < req.body.fermentables; i++) {
+    //   console.log('this works')
+    // }
+    // fermentables = await req.body.fermentables.forEach(function (ferm) {
+    //   Fermentable.findOne({name: ferm.name})
+    // }); 
+    try {
+      const recipe = await Recipe.create({
+        ...req.body,
+        // fermentables: fermentables,
+        user: user_id
+       });
+    
+       const user = await User.findOneAndUpdate({
+        _id: user_id
+      }, {
+        '$addToSet': {
+          myRecipes: recipe._id
+        }, 
+      }, {new: true}).populate('myRecipes');
+    
+      console.log(user)
+      res.send({user})
+     
+    } catch {
+    res.status(500).send({ error: err})
+    }
+    });
+
+    // get user's saved recipes
+
+    router.get('/myrecipes/user', isAuthenticated, async (req, res) => {
+      const user_id = req.session.user_id;
+    
+      const user = await User.findById(user_id).populate('myRecipes');
+    
+      res.send(user.myRecipes);
+    })
 
 
 // // get all drinks or get by search query
