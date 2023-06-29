@@ -78,6 +78,17 @@ code {
     color: white;
     }
 
+
+    .stats-output input {
+      all: unset;
+      width: 36px;
+      margin: 0 4px;
+    }
+
+    .stats-output label {
+      margin-left: 10%;
+    }
+
   .interact {
     cursor: pointer;
     width: fit-content;
@@ -87,6 +98,9 @@ code {
 .hidden {
   display: none;
 }
+
+
+
 /* CUSTOM CLASSES */
 
 .landing-wrap {
@@ -198,11 +212,13 @@ nav li {
 
 .stats-output {
   display: flex;
-  
+  align-items: center;
+  justify-content: center;
 }
 
 
 .stats-output h3 {
+  
  margin: 0 5%;
   
 }

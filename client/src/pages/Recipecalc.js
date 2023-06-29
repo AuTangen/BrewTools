@@ -33,8 +33,8 @@ function RecipeCalc(props) {
     const [gristPercent, setGristPercent] = useState()
     const [fermAmounts, setFermAmounts] = useState([])
     const [fermentables, setFermentables] = useState([])
-    const [gravity, setGravity] = useState()
-    const [finGravity, setFinGravity] = useState()
+    const [gravity, setGravity] = useState(0)
+    const [finGravity, setFinGravity] = useState(0)
     const [abv, setABV] = useState(0.0)
     const [srm, setSRM] = useState(0)
     const [IBUs, setIBUs] = useState(0)
@@ -157,6 +157,7 @@ function RecipeCalc(props) {
     // -----------run calc------------------------------------
 
     const calculate = async () => {
+      
         handleGrainChange();
         let fermDataArray = []
 
@@ -310,7 +311,7 @@ function RecipeCalc(props) {
         og: 0,
         fg: 0,
         abv: 0,
-        color: 0,
+        srm: 0,
         ibus: 0,
         fermentables: [],
         hops: [],
@@ -319,13 +320,14 @@ function RecipeCalc(props) {
     })
 
 
-    const handleFormChange = () => {
+    const handleFormChange = (event) => {
         console.log('form change')
+        const prop = event.target.name
         setRecipeFormState({
             name: recipeName,
             style: '',
-            og: '',
-            fg: '', 
+            og: gravity,
+            fg: finGravity, 
             abv: abv,
             color:  srm ,
             ibus: IBUs ,
@@ -352,8 +354,9 @@ function RecipeCalc(props) {
 
             console.log("data object  " + grainData.color)
             fermDataArray.push(grainData)
-            return fermDataArray;
+            
     }
+    return fermDataArray;
 }
     const saveRecipe = async (event) => {
         event.preventDefault();
@@ -410,7 +413,7 @@ function RecipeCalc(props) {
 
                         <div>
                             <label htmlFor="recipename">Recipe Name:</label>
-                            <input id="recipename" type='text' placeholder='recipe name' className='recipe-input' onChange={handleNameChange} value={recipeName}></input>
+                            <input name="name" id="recipename" type='text' placeholder='recipe name' className='recipe-input' onChange={handleNameChange} value={recipeName}></input>
                         </div>
 
                         <div>
@@ -420,7 +423,7 @@ function RecipeCalc(props) {
 
                         <div>
                             <label htmlFor="beerstyle">Beer Style:</label>
-                            <input id="beerstyle" type='text' placeholder='ex: Stout' className='recipe-input'></input>
+                            <input name="style" id="beerstyle" type='text' placeholder='ex: Stout' className='recipe-input'></input>
                         </div>
 
                         <div>
@@ -435,13 +438,25 @@ function RecipeCalc(props) {
                         <h2 onClick={calculate}>Calculate!</h2>
                     </div>
                     <section className='stats-output'>
-                        <h3>OG: {gravity}</h3>
+                    <label htmlFor="og">OG:</label>
+                        <input name="og" className='stat' type="numeric" value={gravity} onChange={handleFormChange} onInput={() => console.log('input capture')}></input>
+                        <label htmlFor="fg">FG:</label>
+                        <input name="fg" className='stat' type="numeric" value={finGravity} onChange={handleFormChange}></input>
+                        <label htmlFor="abv">ABV:</label>
+                        <input name="abv" className='stat' type="numeric" value={abv} onChange={handleFormChange}></input>
+                        <label htmlFor="srm">SRM:</label>
+                        <input name="srm" className='stat' type="numeric" value={srm} onChange={handleFormChange}></input>
+                        <img src={srmCheck()} />
+                        <label htmlFor="ibus">IBUs:</label>
+                        <input name="ibus" className='stat' type="numeric" value={IBUs} onChange={handleFormChange}></input>
+                        
+                        {/* <h3>OG: {gravity}</h3>
                         <h3>FG: {finGravity}</h3>
                         <h3>ABV: {abv} %</h3>
                         <h3>Color: {srm} SRM</h3>
                         <img src={srmCheck()} />
 
-                        <h3>IBUs: {IBUs}</h3>
+                        <h3>IBUs: {IBUs}</h3> */}
 
 
 
@@ -499,7 +514,14 @@ function RecipeCalc(props) {
                 {props.user && props.user.myRecipes.length && <h2 className="text-center">My Recipes</h2>}
                 {props.user && props.user.myRecipes.length && props.user.myRecipes.map((recipe) => (
                     <div className="recipe" key={recipe._id}>
-                        <p>{recipe.name}</p>
+                        <h3>{recipe.name}</h3>
+                        <h5>{'OG: ' + recipe.og}</h5>
+                        <h5>{'FG: ' + recipe.fg}</h5>
+                        <h5>{'ABV: ' + recipe.abv + '%'}</h5>
+                        <h5>{'SRM: ' + recipe.color}</h5>
+                        <h5>{'IBUs: ' + recipe.ibus}</h5>
+                        {/* <span>{recipe.fermentables[0].amount} lbs</span><h5>{recipe.fermentables[0].name}</h5>
+                        <span>{recipe.fermentables.forEach(ferm => ferm.amount)} lbs</span><p>{recipe.fermentables.forEach(ferm => ferm.name)}</p> */}
                         
                     </div>
                 ))}
