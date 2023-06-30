@@ -228,7 +228,7 @@ function RecipeCalc(props) {
         OG = ((gravitySum / volume) * .001) + 1
         var OGslice = String(OG).slice(0, 5)
         var OGwhole = String(OGslice).slice(2)
-        const attenuation = yeastRef.current.children[0].children[2].value
+        const attenuation = yeastRef.current.children[0].children[1].value
        
         FG =((OGwhole * .001) * ((100 - attenuation) * .01)) + 1
         var FGslice = String(FG).slice(0, 5)
@@ -477,7 +477,7 @@ return yeastData;
                             <label htmlFor="efficiency">Efficiency:</label>
                             <input onChange={handleEffChange} value={efficiency} id="efficiency" type='number' className='recipe-input'></input><span>%</span>
                         </div>
-                        <h2 onClick={calculate}>Calculate!</h2>
+                        
                     </div>
                     <section className='stats-output'>
                     <label htmlFor="og">OG:</label>
@@ -507,7 +507,7 @@ return yeastData;
                     {showErr && (<h3>You must select a grain type!</h3>)}
                     <div className='ferm-calc' onClick={handleGrainChange} onBlur={handleGrainChange}>
                         <div>
-                            <h2 className='form-header'>Fermentables</h2>
+                            <h2 className='form-header-main'>Fermentables</h2>
                             <div className='calc-grid form-header'>
                                 <h4>Qty &#40;lb&#41;</h4>
                                 <h4>Type</h4>
@@ -519,7 +519,7 @@ return yeastData;
                             {inputList}
                         </div>
 
-                        <h3 className='interact' onClick={addFerm}>add +</h3>
+                        <h3 className='interact' onClick={addFerm}>add fermentable +</h3>
                         <h3>Total Grain {grainTotal} lbs</h3>
                     </div>
 
@@ -531,7 +531,7 @@ return yeastData;
 
 
                     <div className='hop-calc'>
-                        <h2 className='form-header'>Hops</h2>
+                        <h2 className='form-header-main'>Hops</h2>
                         <div className='calc-grid-hop form-header'>
                             <h4>Qty &#40;oz&#41;</h4>
                             <h4>Alpha Acid%</h4>
@@ -543,14 +543,14 @@ return yeastData;
                         <div id="hop-list" ref={hopref}>
                             {hopInputList}
                         </div>
-                        <h3 className='interact' onClick={addHop}>add +</h3>
+                        <h3 className='interact' onClick={addHop}>add hop +</h3>
                     </div>
 
                     <div className='calc-yeast'>
-                    <h2 className='form-header'>Yeast</h2>
+                    <h2 className='form-header-main'>Yeast</h2>
                         <div className='calc-grid-hop form-header'>
                             <h4>Name</h4>
-                            <h4>Style</h4>
+                            {/* <h4>Style</h4> */}
                             <h4>Attenuation%</h4>
                            
                         </div>
@@ -558,7 +558,7 @@ return yeastData;
                             {<AddYeast/>}
                         </div>
                     </div>
-
+                    <h2 onClick={calculate}>Calculate!</h2>
                 </form>
 
 

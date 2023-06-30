@@ -40,29 +40,18 @@ function Header(props) {
 
     <header className="header">
       <nav>
-        {/* <a href="/"><img src={logo} className="logoNav" alt="logo" /></a> */}
-
-
-
-
-        {/* Desktop Nav */}
-        <ul className="">
-          {props.user && <li>Welcome {props.user.username}</li>}
-
-
-          <li>
+      
+             
             {props.user ? (
-              <NavLink onClick={logout} to="/auth/logout" >Logout</NavLink>
+              <NavLink className={"nav-link"} onClick={logout} to="/auth/logout" >Logout</NavLink>
             ) : (
-              <div>
-                <NavLink to='/login'>Login</NavLink><span> | </span> <NavLink to='/register'>Register</NavLink>
+              <div className='login-form'>
+                <NavLink className={"nav-link"} to='/login'>Login</NavLink><span className={"nav-link"}> | </span> <NavLink className={"nav-link"} to='/register'>Register</NavLink>
               </div>
             )}
-          </li>
-          <li>
-                {/* <BsNewspaper onclick={dropdown}/> */}
-                {/* <button onclick={dropdown}></button> */}
-          </li>
+          
+         
+          {props.user && <li>Welcome {props.user.username}</li>}
           <div className="dropdown">
       {props.user && <button onClick={handleOpen}>My Recipes</button>}
       {open ? (
@@ -95,7 +84,7 @@ function Header(props) {
     </div>
           
         
-        </ul>
+       
 
       </nav>
       {showRecipes && (

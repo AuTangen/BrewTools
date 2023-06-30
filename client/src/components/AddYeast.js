@@ -61,14 +61,14 @@ const handleAttenChange = (event) => {
 
 
     return (
-        <div name={id} ref={yeastRef} className='calc-grid form-item'>
+        <div name={id} ref={yeastRef} className='calc-grid-yeast form-item'>
             
             
             <select name="yeast" id="yeast" onChange={fetchData} >
                 <option>Select Yeast</option>
                 {yeast.map(outputYeast)}
             </select>
-            <input className='input-small' name="style" type="text" value={style} readOnly></input>          
+            {/* <input className='input-small' name="style" type="text" value={style} readOnly></input>           */}
             <input className='input-small' name="attenuation" type="numeric" value={attenuation} onChange={handleAttenChange}></input>
             
         </div>

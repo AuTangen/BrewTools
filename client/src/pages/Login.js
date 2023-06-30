@@ -15,6 +15,8 @@ function Login(props) {
         password: ''
     })
 
+ 
+
     const handleChange = (event) => {
         const prop = event.target.name
         setFormState({
@@ -23,6 +25,7 @@ function Login(props) {
         });
     }
 
+ 
     const submitLogin = async (event) => {
         event.preventDefault();
         console.log('submitted!')
@@ -41,6 +44,7 @@ function Login(props) {
 
     return (
         <section class="login">
+           
         <form onSubmit={submitLogin}>
 
             <h1>Returning user?</h1>
@@ -50,7 +54,7 @@ function Login(props) {
             <button>Login</button>
         </form>
         <h3>don't have an account?</h3>
-        <NavLink to="/register"><button>Register</button></NavLink>
+        <NavLink className={"link"} to="/register"><p className="accent-red">click here</p></NavLink>
         </section>
     )
 };

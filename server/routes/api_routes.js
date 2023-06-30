@@ -34,7 +34,7 @@ router.get('/fermentable/:name', async (req,res) => {
 router.get('/hops', async (req,res) => {
   hops = await Hops.find();
   res.send(hops)
-  
+});
 
   // get all yeast for dropdown list
 router.get('/yeast', async (req,res) => {
@@ -42,7 +42,7 @@ router.get('/yeast', async (req,res) => {
   res.send(yeast)
   
 });
-});
+
 
 // get one hop
 router.get('/hops/:name', async (req,res) => {
