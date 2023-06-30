@@ -89,7 +89,46 @@ function ApiTesting(props) {
             }
         }
     }
+// -----------------add new yeast to database-------------------------------------------------------------
 
+const [yeastFormState, setYeastFormState] = useState({
+    name: '',
+    style: '',
+    attenuation: ''
+})
+
+const handleNewYeast = (event) => {
+    const yeast = event.target.name
+    setYeastFormState({
+        ...yeastFormState,
+        [yeast]: event.target.value
+    });
+}
+
+
+
+const createYeast = async (event) => {
+    event.preventDefault();
+
+    try {
+        const res = await axios.post('/api/yeast', yeastFormState);
+
+
+
+        setYeastFormState({
+            name: '',
+    style: '',
+    attenuation: ''
+        })
+        console.log('New Yeast Created')
+        console.log(yeastFormState)
+
+    } catch (err) {
+        if (err.code === 402) {
+            setErrMessage(err.response.data.error)
+        }
+    }
+}
 
 
 
@@ -117,6 +156,18 @@ function ApiTesting(props) {
                 <input name='alphaAcid' value={hopFormState.alphaAcid} onChange={handleNewHop} type="numeric" placeholder="Enter alpha acid %"></input>
 
                 <button>Create Hop</button>
+            </form>
+
+            <form onSubmit={createYeast}>
+                <h2>Create New Yeast Object</h2>
+                <h4>for testing purposes only</h4>
+                {errMessage && <p>{errMessage}</p>}
+                <input name='name' value={yeastFormState.name} onChange={handleNewYeast} type="text" placeholder="Enter Yeast Name"></input>
+                <input name='style' value={yeastFormState.style} onChange={handleNewYeast} type="text" placeholder="Enter yeast style"></input>
+                <input name='attenuation' value={yeastFormState.attenuation} onChange={handleNewYeast} type="numeric" placeholder="Enter attenuation %"></input>
+
+
+                <button>Create Yeast</button>
             </form>
         </>
     )

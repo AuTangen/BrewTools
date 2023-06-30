@@ -35,6 +35,13 @@ router.get('/hops', async (req,res) => {
   hops = await Hops.find();
   res.send(hops)
   
+
+  // get all yeast for dropdown list
+router.get('/yeast', async (req,res) => {
+  yeast = await Yeast.find();
+  res.send(yeast)
+  
+});
 });
 
 // get one hop
@@ -43,6 +50,12 @@ router.get('/hops/:name', async (req,res) => {
   res.send(hop)
 })
 
+
+// get one yeast
+router.get('/yeast/:name', async (req,res) => {
+  yeast= await Yeast.findOne({name: req.params.name})
+  res.send(yeast)
+})
 
 
 // // add a new fermentable to the list
@@ -76,6 +89,23 @@ router.post('/hops', async (req, res) => {
   res.status(402).send({ error: err})
   }
   });
+
+  // add a yeast type to the list
+  router.post('/yeast', async (req, res) => {
+
+    try {
+      const yeast = await Yeast.create({
+        ...req.body,
+       
+       });
+       res.send('Yeast Created')
+    console.log(yeast)
+      
+    } catch {
+    res.status(402).send({ error: err})
+    }
+    });
+
   
   // save recipe to user
 // send just the json name or send the whole ferm objecT???

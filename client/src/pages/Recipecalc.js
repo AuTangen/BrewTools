@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import AddFerm from '../components/AddFerm';
 import AddHops from '../components/AddHops';
+import AddYeast from '../components/AddYeast';
 import Header from '../components/Header';
 
 
@@ -27,7 +28,7 @@ import srm40 from '../images/srm40.png'
 function RecipeCalc(props) {
 
 
-    const [recipeName, setRecipeName] = useState()
+    const [recipeName, setRecipeName] = useState('My Recipe')
     const [volume, setVolume] = useState(5)
     const [grainTotal, setGrainTotal] = useState()
     const [gristPercent, setGristPercent] = useState()
@@ -39,7 +40,8 @@ function RecipeCalc(props) {
     const [srm, setSRM] = useState(0)
     const [IBUs, setIBUs] = useState(0)
     const [efficiency, setEfficiency] = useState(75)
-    const [attenuation, setAttenuation] = useState(75)
+    
+    
 
 
 
@@ -95,6 +97,9 @@ function RecipeCalc(props) {
 
     const hopref = React.useRef(null)
 
+    const yeastRef = React.useRef(null)
+
+    
 
     // useEffect(() => {
     //     fetchData();
@@ -223,8 +228,9 @@ function RecipeCalc(props) {
         OG = ((gravitySum / volume) * .001) + 1
         var OGslice = String(OG).slice(0, 5)
         var OGwhole = String(OGslice).slice(2)
-
-        FG = ((OGwhole * .001) * ((100 - attenuation) * .01)) + 1
+        const attenuation = yeastRef.current.children[0].children[2].value
+       
+        FG =((OGwhole * .001) * ((100 - attenuation) * .01)) + 1
         var FGslice = String(FG).slice(0, 5)
 
         var abvCalc = (OGslice - FGslice) * 133
@@ -303,6 +309,8 @@ function RecipeCalc(props) {
 
     };
 
+
+
     // ----------SAVE RECIPE----------------------------------------------------
 
     const [recipeFormState, setRecipeFormState] = useState({
@@ -315,14 +323,14 @@ function RecipeCalc(props) {
         ibus: 0,
         fermentables: [],
         hops: [],
-        yeast: ""
+        yeast: ''
 
     })
 
 
     const handleFormChange = (event) => {
         console.log('form change')
-        const prop = event.target.name
+        
         setRecipeFormState({
             name: recipeName,
             style: '',
@@ -332,8 +340,8 @@ function RecipeCalc(props) {
             color:  srm ,
             ibus: IBUs ,
             fermentables: getfermdata(),
-            hops: [],
-            yeast: ""
+            hops: getHopData(),
+            yeast: getYeastData()
         })
         console.log(recipeFormState)
     }
@@ -358,12 +366,46 @@ function RecipeCalc(props) {
     }
     return fermDataArray;
 }
+
+const getHopData = () => {
+    let hopDataArray = []
+    console.log( hopref.current.children.length)
+    for (let i = 0; i < hopref.current.children.length; i++) {
+        var hopData = {
+            
+            "name": hopref.current.children[i].children[2].value,
+            "amount": hopref.current.children[i].children[0].value,
+            "alphaAcid": hopref.current.children[i].children[1].value,
+            "boilDur": hopref.current.children[i].children[3].value
+        }
+
+        hopDataArray.push(hopData)
+        
+}
+return hopDataArray;
+
+}
+
+const getYeastData = () => {
+    let yeastData = ""
+     yeastRef.current.children[0].children[0].value ? yeastData = yeastRef.current.children[0].children[0].value : yeastData = ''
+  
+
+      console.log('yeast data ' + yeastData)
+
+return yeastData;
+
+}
+
+
+
     const saveRecipe = async (event) => {
         event.preventDefault();
         console.log('submitted!')
         
         await calculate();
-
+        
+        
         
         console.log(recipeFormState)
         if (props.user) try {
@@ -380,8 +422,8 @@ function RecipeCalc(props) {
                 color: srm ,
                 ibus: IBUs ,
                 fermentables: getfermdata(),
-                hops: [],
-                yeast: ""
+                hops: getHopData(),
+                yeast: getYeastData()
             })
 
         } catch (err) {
@@ -404,7 +446,7 @@ function RecipeCalc(props) {
             <section  >
                 <h1>All-Grain Recipe Calculator</h1>
                 <form onSubmit={saveRecipe} onChange={handleFormChange} className='calc-container'>
-                    <button>Save</button>
+                    <button onClick={handleFormChange}>Save</button>
                     <div className='calc-header-wrap'>
                         <div className='calc-header'>
 
@@ -505,27 +547,22 @@ function RecipeCalc(props) {
                     </div>
 
                     <div className='calc-yeast'>
-
+                    <h2 className='form-header'>Yeast</h2>
+                        <div className='calc-grid-hop form-header'>
+                            <h4>Name</h4>
+                            <h4>Style</h4>
+                            <h4>Attenuation%</h4>
+                           
+                        </div>
+                        <div id="yeast-list" ref={yeastRef}>
+                            {<AddYeast/>}
+                        </div>
                     </div>
 
                 </form>
 
 
-                {props.user && props.user.myRecipes.length && <h2 className="text-center">My Recipes</h2>}
-                {props.user && props.user.myRecipes.length && props.user.myRecipes.map((recipe) => (
-                    <div className="recipe" key={recipe._id}>
-                        <h3>{recipe.name}</h3>
-                        <h5>{'OG: ' + recipe.og}</h5>
-                        <h5>{'FG: ' + recipe.fg}</h5>
-                        <h5>{'ABV: ' + recipe.abv + '%'}</h5>
-                        <h5>{'SRM: ' + recipe.color}</h5>
-                        <h5>{'IBUs: ' + recipe.ibus}</h5>
-                        {/* <span>{recipe.fermentables[0].amount} lbs</span><h5>{recipe.fermentables[0].name}</h5>
-                        <span>{recipe.fermentables.forEach(ferm => ferm.amount)} lbs</span><p>{recipe.fermentables.forEach(ferm => ferm.name)}</p> */}
-                        
-                    </div>
-                ))}
-
+            
             </section>
         </>
     )
