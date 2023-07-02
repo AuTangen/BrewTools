@@ -6,6 +6,7 @@ import AddHops from '../components/AddHops';
 import AddYeast from '../components/AddYeast';
 import Header from '../components/Header';
 
+import logo from '../images/logo.png';
 
 import srm0 from '../images/srm0.png'
 import srm3 from '../images/srm3.png'
@@ -442,40 +443,39 @@ return yeastData;
 
     return (
         <>
+           
+            <section className='calc-wrap' >
 
-            <section  >
+            <img src={logo} className="logo responsive " alt="logo" />
                 <h1>All-Grain Recipe Calculator</h1>
                 <form onSubmit={saveRecipe} onChange={handleFormChange} className='calc-container'>
-                    <button onClick={handleFormChange}>Save</button>
-                    <div className='calc-header-wrap'>
-                        <div className='calc-header'>
-
-                            {/* <button id="savebtn">Save</button> */}
-                        </div>
-
-                        <div>
-                            <label htmlFor="recipename">Recipe Name:</label>
+                <div className='recipe-name'>
+                            <label htmlFor="recipename">Recipe Name</label>
                             <input name="name" id="recipename" type='text' placeholder='recipe name' className='recipe-input' onChange={handleNameChange} value={recipeName}></input>
                         </div>
+                    <div className='calc-header-wrap'>
+                       
 
-                        <div>
-                            <label htmlFor="batchvol">Batch Volume:</label>
-                            <input name="batchvol" id="batchvol" type='numeric' className='recipe-input' onChange={handleVolChange} value={volume}></input><span>gal</span>
-                        </div>
+                        
 
-                        <div>
-                            <label htmlFor="beerstyle">Beer Style:</label>
+                        <div className='calc-header-left'>
+                            <div>
+                            <label htmlFor="batchvol">Batch Volume (gal)</label>
+                            <input name="batchvol" id="batchvol" type='numeric' className='recipe-input' onChange={handleVolChange} value={volume}></input>
+                            
+                            </div>
+                            <div>
+                            <label htmlFor="beerstyle">Beer Style</label>
                             <input name="style" id="beerstyle" type='text' placeholder='ex: Stout' className='recipe-input'></input>
+                            </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="boildur">Boil Duration:</label>
-                            <input id="boildur" type='number' placeholder='minutes' className='recipe-input'></input><span>minutes</span>
-                        </div>
-
-                        <div>
-                            <label htmlFor="efficiency">Efficiency:</label>
-                            <input onChange={handleEffChange} value={efficiency} id="efficiency" type='number' className='recipe-input'></input><span>%</span>
+                        <div className='calc-header-right'>
+                            <label htmlFor="boildur">Boil Duration</label>
+                            <input id="boildur" type='number' placeholder='minutes' className='recipe-input'></input>
+                        
+                            <label htmlFor="efficiency">Efficiency %</label>
+                            <input onChange={handleEffChange} value={efficiency} id="efficiency" type='number' className='recipe-input'></input>
                         </div>
                         
                     </div>
@@ -488,7 +488,7 @@ return yeastData;
                         <input name="abv" className='stat' type="numeric" value={abv} onChange={handleFormChange}></input>
                         <label htmlFor="srm">SRM:</label>
                         <input name="srm" className='stat' type="numeric" value={srm} onChange={handleFormChange}></input>
-                        <img src={srmCheck()} />
+                        <img className='mobile-hidden' src={srmCheck()} />
                         <label htmlFor="ibus">IBUs:</label>
                         <input name="ibus" className='stat' type="numeric" value={IBUs} onChange={handleFormChange}></input>
                         
@@ -519,7 +519,7 @@ return yeastData;
                             {inputList}
                         </div>
 
-                        <h3 className='interact' onClick={addFerm}>add fermentable +</h3>
+                        <h3 className='interact add' onClick={addFerm}>add fermentable +</h3>
                         <h3>Total Grain {grainTotal} lbs</h3>
                     </div>
 
@@ -543,22 +543,29 @@ return yeastData;
                         <div id="hop-list" ref={hopref}>
                             {hopInputList}
                         </div>
-                        <h3 className='interact' onClick={addHop}>add hop +</h3>
+                        <h3 className='interact add' onClick={addHop}>add hop +</h3>
                     </div>
 
-                    <div className='calc-yeast'>
+                    <div className='yeast-calc'>
                     <h2 className='form-header-main'>Yeast</h2>
-                        <div className='calc-grid-hop form-header'>
+                        <div className='calc-grid-yeast form-header'>
                             <h4>Name</h4>
                             {/* <h4>Style</h4> */}
                             <h4>Attenuation%</h4>
                            
                         </div>
+                        
                         <div id="yeast-list" ref={yeastRef}>
                             {<AddYeast/>}
                         </div>
                     </div>
-                    <h2 onClick={calculate}>Calculate!</h2>
+                    <div className='bottombtn-div'>
+                        { props.user && (
+                    <button onClick={handleFormChange} id="savebtn">Save Recipe</button>
+                       ) }
+                    <h2 onClick={calculate} className='calculate'>calculate</h2>
+                   
+                    </div>
                 </form>
 
 

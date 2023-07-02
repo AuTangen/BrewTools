@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate} from "react-router-dom";
 
-
+import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 
 
 
@@ -44,7 +44,7 @@ function Login(props) {
 
     return (
         <section class="login">
-           
+            
         <form onSubmit={submitLogin}>
 
             <h1>Returning user?</h1>
@@ -55,6 +55,9 @@ function Login(props) {
         </form>
         <h3>don't have an account?</h3>
         <NavLink className={"link"} to="/register"><p className="accent-red">click here</p></NavLink>
+        <div className="back">
+        <NavLink className={'nav-link back'} to={`/recipecalc`}><BsFillArrowLeftSquareFill/><span> go back</span></NavLink>   
+        </div>
         </section>
     )
 };

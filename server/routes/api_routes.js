@@ -5,6 +5,7 @@ const Hops = require('../models/Hops')
 const Yeast = require('../models/Yeast')
 const Recipe = require('../models/Recipe')
 const User = require('../models/User')
+const ObjectId = require('mongoose').Types.ObjectId;
 
 function isAuthenticated(req, res, next) {
   if (!req.session.user_id) 
@@ -142,7 +143,7 @@ router.post('/hops', async (req, res) => {
     }
     });
 
-    // get user's saved recipes
+    // get user's saved recipes for dropdown list
 
     router.get('/myrecipes/user', isAuthenticated, async (req, res) => {
       const user_id = req.session.user_id;
@@ -151,6 +152,29 @@ router.post('/hops', async (req, res) => {
     
       res.send(user.myRecipes);
     })
+
+// get full recipe info for one recipe by ID
+
+    router.get('/recipe/:id', async (req, res) => {
+      // const band = await Band.findOne({name: req.params.name })
+      const recipe = await Recipe.findById(new ObjectId(req.params.id))
+   
+      console.log(recipe)
+      res.send(recipe)
+  });
+
+  // delete user recipe
+
+  router.delete('/recipe/:id', isAuthenticated, async (req, res) => {
+    
+    const recipe_id = req.params.id
+
+    await Recipe.findByIdAndDelete(new ObjectId(recipe_id))
+
+    res.send({message: 'Recipe was deleted successfully.'})
+ 
+})
+  
 
 
 // // get all drinks or get by search query

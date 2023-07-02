@@ -9,6 +9,7 @@ import Login from "./pages/Login.js";
 import Register from "./pages/Register.js";
 import Recipecalc from "./pages/Recipecalc.js";
 import ApiTesting from "./pages/APItesting.js";
+import ViewRecipe from "./pages/ViewRecipe.js";
 
 import Header from './components/Header';
 
@@ -38,6 +39,7 @@ useEffect(() => {
         <Route path="/register" element={!user ? <Register setUser={setUser}/> : <Navigate to="/recipecalc" />} />
         <Route path="/recipecalc" element={<Recipecalc user={user} setUser={setUser} />} />
         <Route path="/apitesting" element={<ApiTesting user={user} setUser={setUser} />} />
+        <Route path='/recipe/:id' element={<ViewRecipe user={user} setUser={setUser}/> } />
       </Routes>
       
     </>
