@@ -32,7 +32,7 @@ function ViewRecipe(props) {
 
         axios.get(`/api/recipe/${id}`)
             .then(res => {
-                console.log('res', res.data)
+                
                 setRecipe(res.data);
                 setFermentables(res.data.fermentables)
                 setHops(res.data.hops)
@@ -40,13 +40,11 @@ function ViewRecipe(props) {
     }, []);
 
 
-    console.log(fermentables)
     const deleteRecipe = async (recipeID) => {
 
         try {
             const res = await axios.delete(`/api/recipe/${recipeID}`)
-            console.log('deleted')
-            console.log(res.data)
+          
             setRecipe({});
             navigate('/recipecalc')
         } catch (err) {
@@ -243,9 +241,9 @@ function ViewRecipe(props) {
 
 
                 </div>
-
+                <button onClick={() => deleteRecipe(recipe._id)} >Delete</button>
             </section>
-
+            
         </>
     )
 };

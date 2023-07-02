@@ -21,7 +21,7 @@ function Landing(props) {
            <NavLink to="/recipecalc"><button className="start" id='start' alt="start">Get Started</button></NavLink>
            
 
-           <NavLink to="/apitesting"><h2>To API Testing Ground</h2></NavLink>
+           {/* <NavLink to="/apitesting"><h2>To API Testing Ground</h2></NavLink> */}
         </section>
     )
 }

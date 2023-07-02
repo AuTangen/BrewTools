@@ -120,11 +120,12 @@ header nav {
     /* border: solid var(--accent-red) 2px; */
     background-color:#ccc;
     color: var(--back-color)
+    
     }
 
 
    button {
-    background-color: var(--btn-red);
+    background-color: #ccc;
     border-radius: 6px;
     padding: 1% 4%;
     font-size: 20px;
@@ -134,6 +135,8 @@ header nav {
     cursor: pointer;
   color: var(--back-color);
   text-transform: uppercase;
+  border: solid #7e7e7e 4px;
+
    } 
 
    button:hover {
@@ -226,15 +229,16 @@ color: var(--accent-tan);
   width: 200px;
   background-color: var(--accent-red);
   font-size: 20px;
-  font-family: "bebas-neue-rounded", sans-serif;
+  /* font-family: "bebas-neue-rounded", sans-serif;
   font-weight: 500;
-  font-style: normal;
+  font-style: normal; */
   /* font-family: "factoria", serif;
   font-weight: 900;
   font-style: normal; */
 color: var(--back-color);
 text-transform: uppercase;
 border-radius: 8px;
+border: none;
 padding: 5%;
 }
 
@@ -306,7 +310,7 @@ nav {
   align-items: center;
   justify-content: center;
   align-self: center;
-  margin: 2% 2%;
+  margin: 2% 2% 20% 2%;
   border: solid #ccc 4px;
   border-radius: 12px;
  width: fit-content;
@@ -401,6 +405,7 @@ font-style: normal;
   padding: 2%;
   color: var(--back-color);
   background-color: var(--calc-green);
+  opacity: 95%;
 }
 
 
@@ -440,6 +445,8 @@ font-style: normal;
   padding: 2% 5%;
   /* text-transform: uppercase; */
   font-size: 24px;
+  border: solid #7e7e7e 4px;
+
 }
 
 .calculate:hover {
@@ -546,11 +553,11 @@ padding: 2%
 }
 
 .stats-output {
-  width: fit-content;
+  width: 90%
 }
 
 .stats-output label {
-  font-size: medium;
+  font-size: 12px;
 }
 
 .stats-output input {

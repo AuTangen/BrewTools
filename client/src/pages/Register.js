@@ -29,11 +29,11 @@ setShowMessage(true)
 
     const submitRegister = async (event) => {
         event.preventDefault();
-        console.log('submitted!')
+        
         try {
             const res = await axios.post('/auth/register', formState);
             setUser(res.data.user)
-            console.log(res.data.user)
+            
         } catch (err) {
             if (err.code === 402) {
                 console.log()

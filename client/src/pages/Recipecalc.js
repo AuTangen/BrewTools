@@ -43,7 +43,7 @@ function RecipeCalc(props) {
     const [srm, setSRM] = useState(0)
     const [IBUs, setIBUs] = useState(0)
     const [efficiency, setEfficiency] = useState(75)
-    
+    const [savedMessage, setSavedMessage] = useState(false)
     
 
 
@@ -177,7 +177,7 @@ function RecipeCalc(props) {
                 "extractPot": ref.current.children[i].children[4].value
             }
 
-            console.log("data object  " + grainData.color)
+            
             fermDataArray.push(grainData)
 
 
@@ -194,7 +194,7 @@ function RecipeCalc(props) {
         let SRM = 0;
 
         for (let i = 0; i < fermAmounts.length; i++) {
-            console.log(fermDataArray[i].color)
+            
             if (!fermDataArray[i].color) {
                 console.log('error handling')
                 setShowErr(true)
@@ -208,7 +208,7 @@ function RecipeCalc(props) {
         }
         SRM = (1.4922 * (MCUsum ** 0.6859)).toFixed(2)
 
-        console.log("SRM " + SRM)
+       
         setSRM(SRM)
 
 
@@ -280,7 +280,7 @@ function RecipeCalc(props) {
 
     const handleVolChange = (event) => {
         event.preventDefault()
-        console.log(event.target.value)
+        
         setVolume(event.target.value)
 
     }
@@ -345,7 +345,8 @@ function RecipeCalc(props) {
 
 
     const handleFormChange = (event) => {
-        console.log('form change')
+        
+        
         
         setRecipeFormState({
             name: recipeName,
@@ -361,14 +362,14 @@ function RecipeCalc(props) {
             hops: getHopData(),
             yeast: getYeastData()
         })
-        console.log(recipeFormState)
+        
     }
 
 
 
     const getfermdata = () => {
         let fermDataArray = []
-        console.log( ref.current.children.length)
+        
         for (let i = 0; i < ref.current.children.length; i++) {
             var grainData = {
                 
@@ -378,7 +379,7 @@ function RecipeCalc(props) {
                 "extractPot": ref.current.children[i].children[4].value
             }
 
-            console.log("data object  " + grainData.color)
+           
             fermDataArray.push(grainData)
             
     }
@@ -387,7 +388,7 @@ function RecipeCalc(props) {
 
 const getHopData = () => {
     let hopDataArray = []
-    console.log( hopref.current.children.length)
+    
     for (let i = 0; i < hopref.current.children.length; i++) {
         var hopData = {
             
@@ -409,7 +410,7 @@ const getYeastData = () => {
      yeastRef.current.children[0].children[0].value ? yeastData = yeastRef.current.children[0].children[0].value : yeastData = ''
   
 
-      console.log('yeast data ' + yeastData)
+      
 
 return yeastData;
 
@@ -419,13 +420,13 @@ return yeastData;
 
     const saveRecipe = async (event) => {
         event.preventDefault();
-        console.log('submitted!')
+        
         
         await calculate();
         
         
+        setSavedMessage(true)
         
-        console.log(recipeFormState)
         if (props.user) try {
             const res = await axios.post('/api/myrecipes', recipeFormState);
 
@@ -455,6 +456,10 @@ return yeastData;
         else {
             console.log('you must be signed in to save a recipe!')
         }
+    }
+
+    const handleMessageClick = () => {
+        setSavedMessage(false)
     }
 
 
@@ -579,17 +584,27 @@ return yeastData;
                         </div>
                     </div>
                     <div className='bottombtn-div'>
-                        { props.user && (
-                    <button onClick={handleFormChange} id="savebtn">Save Recipe</button>
-                       ) }
+                       
                     <h2 onClick={calculate} className='calculate'>calculate</h2>
                    
                     </div>
+                    { props.user ? (
+                    <button onClick={handleFormChange} id="savebtn">Save Recipe</button>
+                       ) : <p>sign in to save</p>}
                 </form>
 
 
             
             </section>
+
+            {savedMessage && 
+            <div className='login-message'>
+            <h3>Recipe saved to database</h3>
+            <button onClick={handleMessageClick}>OK</button>
+
+            </div>
+            }    
+
         </>
     )
 }
