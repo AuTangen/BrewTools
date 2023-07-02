@@ -1,0 +1,94 @@
+[
+    {
+        "name": "Ahtanum",
+        "alphaAcid": 4.8
+    },
+    {
+        "name": "Amarillo",
+        "alphaAcid": 9.5
+    },
+    {
+        "name": "Aurora",
+        "alphaAcid": 7
+    },
+    {
+        "name": "Cascade",
+        "alphaAcid": 5
+    },
+    {
+        "name": "Centennial",
+        "alphaAcid": 10
+    },
+    {
+        "name": "Chinook",
+        "alphaAcid": 12.5
+    },
+    {
+        "name": "Citra",
+        "alphaAcid": 12.3
+    },
+    {
+        "name": "Columbus",
+        "alphaAcid": 14
+    },
+    {
+        "name": "El Dorado",
+        "alphaAcid": 16
+    },
+    {
+        "name": "Fuggle",
+        "alphaAcid": 4.5
+    },
+    {
+        "name": "Galaxy",
+        "alphaAcid": 13.4
+    },
+    {
+        "name": "Hallertau",
+        "alphaAcid": 4.3
+    }, 
+    {
+        "name": "Horizon",
+        "alphaAcid": 11.8
+    },
+    {
+        "name": "Melba",
+        "alphaAcid": 7.5
+    },
+    {
+        "name": "Mosaic",
+        "alphaAcid": 10.5
+    },
+    {
+        "name": "Nugget",
+        "alphaAcid": 11.75
+    },
+    {
+        "name": "Perle",
+        "alphaAcid": 7.5
+    },
+    {
+        "name": "Saaz",
+        "alphaAcid": 3.5
+    },
+    {
+        "name": "Simcoe",
+        "alphaAcid": 12.25
+    },
+    {
+        "name": "Summit",
+        "alphaAcid": 16.8
+    },
+    {
+        "name": "Warrior",
+        "alphaAcid": 15
+    },
+    {
+        "name": "Willamette",
+        "alphaAcid": 4.5
+    },
+    {
+        "name": "Zeus",
+        "alphaAcid": 16
+    }
+]

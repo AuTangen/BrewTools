@@ -1,0 +1,62 @@
+[
+    {
+        "name": "American Ale",
+        "style": "American/IPA",
+        "attenuation": 78
+    },
+    {
+        "name": "Belgian Ale",
+        "style": "Belgian/Specialty",
+        "attenuation": 77
+    }, 
+    {
+        "name": "British Ale",
+        "style": "English Ale",
+        "attenuation": 75
+    }, 
+    {
+        "name": "California Ale",
+        "style": "American/IPA",
+        "attenuation": 74
+    }, 
+    {
+        "name": "Dry English",
+        "style": "English Ale",
+        "attenuation": 90
+    },
+    {
+        "name": "English Ale",
+        "style": "Dry Yeast",
+        "attenuation": 79
+    },
+    {
+        "name": "French Saison",
+        "style": "Saison",
+        "attenuation": 81
+    },
+    {
+        "name": "German Lager",
+        "style": "Lager",
+        "attenuation": 77
+    },
+    {
+        "name": "Kölsch Ale",
+        "style": "Lager",
+        "attenuation": 73
+    },
+    {
+        "name": "Neutral Ale",
+        "style": "American/IPA",
+        "attenuation": 76
+    },
+    {
+        "name": "Trappist Ale",
+        "style": "Belgian/Specialty",
+        "attenuation": 78
+    },
+    {
+        "name": "Wheat Beer",
+        "style": "Hefeweizen",
+        "attenuation": 74
+    }
+]
