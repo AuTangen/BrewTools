@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json())
 
 app.use(express.static('../client/build'));
-
+app.set('trust proxy', 1)
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
