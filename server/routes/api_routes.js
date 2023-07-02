@@ -167,6 +167,27 @@ router.post('/hops', async (req, res) => {
     res.send({message: 'Recipe was deleted successfully.'})
  
 })
+
+
+// SEED DATABASE
+
+router.post('/seedferm' , async (req, res) => {
+  await Fermentable.create(req.body)
+
+  res.send('fermentalbes seeded')
+})
+
+router.post('/seedhops' , async (req, res) => {
+  await Hops.create(req.body)
+
+  res.send('hops seeded')
+})
+
+router.post('/seedyeast' , async (req, res) => {
+  await Yeast.create(req.body)
+
+  res.send('yeast seeded')
+})
   
 
 module.exports = router;
