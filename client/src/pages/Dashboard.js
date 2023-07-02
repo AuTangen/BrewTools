@@ -382,7 +382,7 @@ function Dashboard(props) {
         await axios.post('/api/seedhops', hopSeeds);
 
         await axios.post('/api/seedyeast', hopSeeds);
-
+            console.log('seeded!')
     }
 
 
