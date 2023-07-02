@@ -24,6 +24,12 @@ const recipeSchema = new Schema({
     ibus: {
          type: Number
     },
+    volume: {
+        type: Number
+    },
+    boilDur: {
+        type: Number
+    },
     fermentables: [{
         
     }],

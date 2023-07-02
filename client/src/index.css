@@ -172,7 +172,7 @@ header nav {
   .back {
   
     margin-top: 15%;
-    
+   
   }
 
   .close {
@@ -525,6 +525,18 @@ border-bottom: solid var(--accent-red) 2px;
   margin-bottom: 5%;
 }
 
+.input-hop {
+  width: fit-content;
+}
+
+.one-recipe {
+  text-align: center;
+  padding: 2% 0;
+}
+
+.calc-section {
+padding: 2%
+}
 
 
 @media screen and (max-width: 768px) {
@@ -546,7 +558,9 @@ border-bottom: solid var(--accent-red) 2px;
   margin: 1%;
   
 }
-
+.calc-container {
+  margin-top: 10%;
+}
 
 }
 

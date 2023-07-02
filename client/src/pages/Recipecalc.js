@@ -30,7 +30,9 @@ function RecipeCalc(props) {
 
 
     const [recipeName, setRecipeName] = useState('My Recipe')
+    const [recipeStyle, setRecipeStyle] = useState()
     const [volume, setVolume] = useState(5)
+    const [boilDur, setBoilDur] = useState(60)
     const [grainTotal, setGrainTotal] = useState()
     const [gristPercent, setGristPercent] = useState()
     const [fermAmounts, setFermAmounts] = useState([])
@@ -288,6 +290,17 @@ function RecipeCalc(props) {
         event.preventDefault();
         setRecipeName(event.target.value)
     }
+      // -------------------Style Change----------------------------------
+      const handleStyleChange = (event) => {
+        event.preventDefault();
+        setRecipeStyle(event.target.value)
+    }
+      // -------------------Style Change----------------------------------
+      const handleBoilChange = (event) => {
+        event.preventDefault();
+        setBoilDur(event.target.value)
+    }
+
 
     // -----------------------Add Fermentable to Recipe List-----------------------------------------------------
 
@@ -319,6 +332,8 @@ function RecipeCalc(props) {
         style: '',
         og: 0,
         fg: 0,
+        volume: 0,
+        boilDur: 0,
         abv: 0,
         srm: 0,
         ibus: 0,
@@ -334,11 +349,13 @@ function RecipeCalc(props) {
         
         setRecipeFormState({
             name: recipeName,
-            style: '',
+            style: recipeStyle,
             og: gravity,
-            fg: finGravity, 
-            abv: abv,
-            color:  srm ,
+            fg: finGravity,
+            volume: volume,
+            boilDur: boilDur,
+            abv:  abv ,
+            color: srm ,
             ibus: IBUs ,
             fermentables: getfermdata(),
             hops: getHopData(),
@@ -416,9 +433,11 @@ return yeastData;
 
             setRecipeFormState({
                 name: recipeName,
-                style: '',
-                og: '',
-                fg: '',
+                style: recipeStyle,
+                og: gravity,
+                fg: finGravity,
+                volume: volume,
+                boilDur: boilDur,
                 abv:  abv ,
                 color: srm ,
                 ibus: IBUs ,
@@ -466,13 +485,13 @@ return yeastData;
                             </div>
                             <div>
                             <label htmlFor="beerstyle">Beer Style</label>
-                            <input name="style" id="beerstyle" type='text' placeholder='ex: Stout' className='recipe-input'></input>
+                            <input name="style" id="beerstyle" type='text' placeholder='ex: Stout' className='recipe-input' value={recipeStyle} onChange={handleStyleChange}></input>
                             </div>
                         </div>
 
                         <div className='calc-header-right'>
                             <label htmlFor="boildur">Boil Duration</label>
-                            <input id="boildur" type='number' placeholder='minutes' className='recipe-input'></input>
+                            <input id="boildur" type='number' placeholder='minutes' className='recipe-input' onChange={handleBoilChange} value={boilDur}></input>
                         
                             <label htmlFor="efficiency">Efficiency %</label>
                             <input onChange={handleEffChange} value={efficiency} id="efficiency" type='number' className='recipe-input'></input>

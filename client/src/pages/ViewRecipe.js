@@ -2,6 +2,8 @@ import { NavLink, useNavigate, useParams, } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import { BsFillArrowLeftSquareFill } from "react-icons/bs";
+
 import srm0 from '../images/srm0.png'
 import srm3 from '../images/srm3.png'
 import srm5 from '../images/srm5.png'
@@ -23,6 +25,8 @@ function ViewRecipe(props) {
     const { id } = useParams();
 
     const [recipe, setRecipe] = useState({});
+    const [fermentables, setFermentables] = useState([])
+    const [hops, setHops] = useState([])
 
     useEffect(() => {
 
@@ -30,12 +34,13 @@ function ViewRecipe(props) {
             .then(res => {
                 console.log('res', res.data)
                 setRecipe(res.data);
-
+                setFermentables(res.data.fermentables)
+                setHops(res.data.hops)
             });
     }, []);
 
 
-
+    console.log(fermentables)
     const deleteRecipe = async (recipeID) => {
 
         try {
@@ -52,8 +57,39 @@ function ViewRecipe(props) {
 
     }
 
+    const mapFerms = (fermentables) => {
+        return (
+            <div className='calc-grid form-item'>
+                <input className='input-small' value={fermentables.amount} name="amount" type='numeric' readOnly></input>
+                <input name="fermentables" id="fermentables" value={fermentables.name} readOnly></input>
+
+
+            </div>
+
+
+        )
+    }
+    const mapHops = (hops) => {
+        return (
+            <div className='calc-grid-hop form-item'>
+                <input className='input-small' name="amount" type='numeric' value={hops.amount} readOnly></input>
+                <input className='input-small' name="alpha" type="numeric" value={hops.alphaAcid} readOnly></input>
+                <input className='input-hop' name="amount" type='numeric' value={hops.name} readOnly></input>
+                <input className='input-small' name="duration" type="numeric" value={hops.boilDur} readOnly></input>
+
+
+
+            </div>
+
+
+        )
+    }
+
+
 
     const OutputRecipe = ({ recipe }) => {
+
+
         console.log('recipe', recipe)
         const srmCheck = () => {
             let srmCheck = ""
@@ -94,18 +130,51 @@ function ViewRecipe(props) {
                 srmCheck = srm0
             }
             return srmCheck
+
+
         }
 
 
-        return (
-            <div className="one-artist-section">
-                <div key={recipe._id} className="one-recipe">
 
+        return (
+            <div className="one-recipe-section">
+
+
+                <div key={recipe._id} className="one-recipe">
+                    <div>
+                        <h1 className="one-recipe-title">{recipe.name}</h1>
+                    </div>
 
                     <div className="recipe-info">
+                        <div className='calc-header-wrap'>
 
-                        <h4>{recipe.name}</h4>
+
+
+
+                            <div className='calc-header-left'>
+                                <div>
+                                    <label htmlFor="batchvol">Batch Volume (gal)</label>
+                                    <input name="batchvol" id="batchvol" type='numeric' className='recipe-input' value={recipe.volume} readOnly></input>
+
+                                </div>
+                                <div>
+                                    <label htmlFor="beerstyle">Beer Style</label>
+                                    <input name="style" id="beerstyle" type='text' placeholder='ex: Stout' className='recipe-input' value={recipe.style} readOnly></input>
+                                </div>
+                            </div>
+
+                            <div className='calc-header-right'>
+                                <label htmlFor="boildur">Boil Duration</label>
+                                <input id="boildur" type='number' placeholder='minutes' className='recipe-input' value={recipe.boilDur} readOnly></input>
+
+                                <label htmlFor="efficiency">Efficiency %</label>
+                                <input value={75} id="efficiency" type='number' className='recipe-input' readOnly></input>
+                            </div>
+
+                        </div>
+
                         <section className='stats-output'>
+
                             <label htmlFor="og">OG:</label>
                             <input name="og" className='stat' type="numeric" value={recipe.og}></input>
                             <label htmlFor="fg">FG:</label>
@@ -117,26 +186,63 @@ function ViewRecipe(props) {
                             <img className='mobile-hidden' src={srmCheck()} />
                             <label htmlFor="ibus">IBUs:</label>
                             <input name="ibus" className='stat' type="numeric" value={recipe.ibus}></input>
-                            
+
                         </section>
-                        <button onClick={() => deleteRecipe(recipe._id)}>Delete</button>
+
                     </div>
+
+
                 </div>
             </div>
         );
     }
 
 
+
     return (
         <>
-
-            <section className='one-recipe-container'>
+            <NavLink className={'nav-link back'} to={`/recipecalc`}><BsFillArrowLeftSquareFill /><span> go back</span></NavLink>
+            <section className='calc-container'>
 
                 <OutputRecipe recipe={recipe} />
 
+                <div className='calc-section'>
+                    <h2>Fermentables</h2>
+                    <div className='calc-grid form-header'>
+                        <h4>Qty &#40;lb&#41;</h4>
+                        <h4>Type</h4>
+
+                    </div>
+                    {fermentables.map(mapFerms)}
+
+                </div>
+
+                <div className='calc-section'>
+                    <h2>Hops</h2>
+                    <div className='calc-grid-hop form-header'>
+                        <h4>Qty &#40;oz&#41;</h4>
+                        <h4>AA%</h4>
+                        <h4>Type</h4>
+                        <h4>Boil Duration &#40;min&#41;</h4>
 
 
+                    </div>
+                    {hops.map(mapHops)}
 
+                </div>
+                <div>
+                    <div className='calc-grid form-item'>
+                        <div></div>
+                        <h2>Yeast</h2>
+                        <div className='calc-grid-yeast form-header'>
+
+                            <input name="yeast" type="text" value={recipe.yeast} ></input>
+
+                        </div>
+                    </div>
+
+
+                </div>
 
             </section>
 
