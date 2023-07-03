@@ -571,5 +571,21 @@ padding: 2%
   padding: 5%
 }
 
+input {
+
+  width: 150px;
+  font-size: large;
+
+}
+
+select {
+  font-size: large;
+}
+
+.input-small {
+  font-size: large;
+  width: 36px;
+}
+
 }
 
