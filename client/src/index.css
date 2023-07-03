@@ -112,7 +112,7 @@ header nav {
   }
   
   select {
-    padding: 2%;
+    padding: 3%;
     border-radius: 4px;
     height: fit-content;
     width: fit-content;
@@ -226,6 +226,7 @@ color: var(--accent-tan);
 
 .start {
   margin-top: 10%;
+  margin-bottom: 10%;
   width: 200px;
   background-color: var(--accent-red);
   font-size: 20px;
@@ -390,7 +391,8 @@ text-align: center;
 }
 
 .input-small {
-  width: 28px;
+  
+  width: 36px;
 }
 
 .stats-output {
@@ -416,7 +418,6 @@ font-style: normal;
  margin: 0 2%;
   
 }
-
 
 
 .ferm-calc {
@@ -567,6 +568,7 @@ padding: 2%
 }
 .calc-container {
   margin-top: 10%;
+  padding: 5%
 }
 
 }
