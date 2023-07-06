@@ -140,17 +140,29 @@ function RecipeCalc(props) {
         let percentArray = [];
 
         var arrayNumbers = valueArray.map(Number)
-        arrayNumbers.forEach(function (num) {
-            percentArray.push((num / sum * 100).toFixed(2))
-            for (let i = 0; i < percentArray.length; i++) {
-
-                divObject[i].children[2].innerHTML = percentArray[i] + '%'
+        console.log('array numbers ' + arrayNumbers)
+        console.log('valuearray ' + valueArray)
+        if (sum !== 0) {
+            arrayNumbers.forEach(function (num) {      
+                percentArray.push((num / sum * 100).toFixed(2))
+                for (let i = 0; i < percentArray.length; i++) {
+    
+                    divObject[i].children[2].innerHTML = percentArray[i] + '%'
+               
+    
             }
+    
+            
+            });
 
+        }
 
-        });
+        else {
+            divObject[0].children[2].innerHTML = 0.00 + '%'
+        }
+      
 
-
+        
         setGrainTotal(sum)
         setFermAmounts(arrayNumbers)
 
