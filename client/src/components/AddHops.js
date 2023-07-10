@@ -49,7 +49,16 @@ const handleDurChange = (event) => {
     useEffect(() => {
         axios.get('/api/hops')
             .then(res => {
-                setHop(res.data);
+                const abc = res.data.sort(function (a, b) {
+                    if (a.name < b.name) {
+                      return -1;
+                    }
+                    if (a.name > b.name) {
+                      return 1;
+                    }
+                    return 0;
+                  });
+                setHop(abc);;
             });
     }, []);
 
